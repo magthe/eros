@@ -268,14 +268,12 @@ This function also removes itself from `pre-command-hook'."
   "Inspect the result of last `eros-eval-'."
   (interactive)
   (when eros--last-result
-    (get-buffer-create eros--inspect-buffer-name)
-    (let ((print-length nil)
-          (print-level nil))
-      (pp-display-expression eros--last-result eros--inspect-buffer-name)
-      (with-current-buffer (get-buffer-create eros--inspect-buffer-name)
-        (run-hooks 'eros-inspect-hooks)))
-    (unless (get-buffer-window eros--inspect-buffer-name)
-      (switch-to-buffer-other-window eros--inspect-buffer-name))))
+    (with-current-buffer-window eros--inspect-buffer-name '(display-buffer-at-bottom) nil
+      (run-hooks 'eros-inspect-hooks)
+      (let ((print-length nil)
+            (print-level nil))
+        (insert (pp-to-string eros--last-result)))
+      (special-mode))))
 
 
 ;; Minor mode
