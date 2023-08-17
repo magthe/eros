@@ -78,6 +78,12 @@ If the symbol `command', they're erased before the next command."
                  (const :tag "Last indefinitely" nil))
   :package-version '(eros "0.1.0"))
 
+(defcustom eros-inspect-update-post-eval nil
+  "Control if the eros-inspect buffer should pop up after each eval."
+  :group 'eros
+  :type 'boolean
+  :package-version '(eros "0.1.1"))
+
 (defcustom eros-inspect-hooks '()
   "Hooks to run after eros-inspect buffer is opened. Especially
 useful for disabling stuff, like flycheck etc.
@@ -248,7 +254,7 @@ This function also removes itself from `pre-command-hook'."
   (interactive "P")
   (let ((result (eval-last-sexp eval-last-sexp-arg-internal)))
     (setq eros--last-result result)
-    (when (get-buffer eros--inspect-buffer-name)
+    (when eros-inspect-update-post-eval
       (eros-inspect-last-result))
     (eros--eval-overlay
      result
